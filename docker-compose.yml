@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres_18_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_18_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - postgres_18_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_18_web
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8081:80"
+    volumes:
+      - pgadmin_18_data:/var/lib/pgadmin
+    networks:
+      - postgres_18_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_18_data:
+    driver: local
+  pgadmin_18_data:
+    driver: local
+
+networks:
+  postgres_18_network:
+    driver: bridge
