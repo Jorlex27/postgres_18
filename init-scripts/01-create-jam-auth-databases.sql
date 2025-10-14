@@ -6,8 +6,8 @@ CREATE DATABASE jam_auth_dev
     WITH
     OWNER = postgres
     ENCODING = 'UTF8'
-    LC_COLLATE = 'en_US.utf8'
-    LC_CTYPE = 'en_US.utf8'
+    LC_COLLATE = 'C'
+    LC_CTYPE = 'C'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
@@ -16,8 +16,8 @@ CREATE DATABASE jam_auth_test
     WITH
     OWNER = postgres
     ENCODING = 'UTF8'
-    LC_COLLATE = 'en_US.utf8'
-    LC_CTYPE = 'en_US.utf8'
+    LC_COLLATE = 'C'
+    LC_CTYPE = 'C'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
@@ -26,8 +26,8 @@ CREATE DATABASE jam_auth_prod
     WITH
     OWNER = postgres
     ENCODING = 'UTF8'
-    LC_COLLATE = 'en_US.utf8'
-    LC_CTYPE = 'en_US.utf8'
+    LC_COLLATE = 'C'
+    LC_CTYPE = 'C'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 

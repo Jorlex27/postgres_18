@@ -1,0 +1,26 @@
+# Backup files
+backups/
+*.dump
+*.dump.gz
+*.sql
+*.sql.gz
+
+# Logs
+logs/
+*.log
+
+# Environment files (contains passwords)
+.backup.env
+.env
+*.env
+
+# PostgreSQL data
+data/
+pgdata/
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+.claude/
