@@ -97,9 +97,44 @@ if [ $? -eq 0 ]; then
     BACKUP_SIZE=$(du -h "$BACKUP_FILE" 2>/dev/null | cut -f1)
     if [ -z "$BACKUP_SIZE" ]; then
         BACKUP_SIZE=$(du -h "${BACKUP_FILE}.gz" 2>/dev/null | cut -f1)
+        BACKUP_FILE="${BACKUP_FILE}.gz"
     fi
     log_message "Backup completed successfully! Size: $BACKUP_SIZE"
     send_notification "SUCCESS" "Backup completed: $BACKUP_FILE"
+
+    # Upload to S3 if enabled
+    if [ "${S3_UPLOAD_ENABLED:-true}" = "true" ]; then
+        log_message "=== Uploading backup to S3 ==="
+
+        # Check if backup-manager container is available
+        if command -v docker &> /dev/null; then
+            # Running from host, use docker exec
+            if docker ps | grep -q "postgres-backup-manager"; then
+                log_message "Uploading via backup-manager container..."
+                if docker exec postgres-backup-manager /s3-scripts/upload-to-s3.sh "$BACKUP_FILE"; then
+                    log_message "S3 upload completed successfully"
+                else
+                    log_message "WARNING: S3 upload failed, but local backup is safe"
+                fi
+            else
+                log_message "WARNING: backup-manager container not running, skipping S3 upload"
+            fi
+        else
+            # Running inside container, check if upload script is available
+            if [ -x "/s3-scripts/upload-to-s3.sh" ]; then
+                log_message "Uploading to S3..."
+                if /s3-scripts/upload-to-s3.sh "$BACKUP_FILE"; then
+                    log_message "S3 upload completed successfully"
+                else
+                    log_message "WARNING: S3 upload failed, but local backup is safe"
+                fi
+            else
+                log_message "INFO: S3 upload script not available, skipping S3 upload"
+            fi
+        fi
+    else
+        log_message "INFO: S3 upload is disabled"
+    fi
 else
     log_message "ERROR: Backup failed!"
     send_notification "ERROR" "Backup failed for database: $POSTGRES_DB"
