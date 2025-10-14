@@ -1,6 +1,13 @@
-# PostgreSQL 18 with Automated Backup System
+# PostgreSQL 18 with Automated Backup System + AWS S3
 
-Setup lengkap PostgreSQL 18 dengan sistem backup otomatis, rotation policy, dan Docker support.
+Setup lengkap PostgreSQL 18 dengan sistem backup otomatis, AWS S3 offsite backup, rotation policy, dan Docker support.
+
+## 📚 Documentation
+
+- **⚡ [Quick Start Guide](QUICK_START.md)** - 5 minute setup
+- **📖 [Complete Installation Guide](INSTALLATION_GUIDE.md)** - Step-by-step from scratch
+- **☁️ [S3 Integration Details](S3_INTEGRATION.md)** - Technical architecture
+- **🔧 [Backup Manager README](backup-manager/README.md)** - S3 operations
 
 ## Quick Start
 
@@ -123,19 +130,32 @@ psql -U postgres -d postgres
 
 ### Backup Operations
 
-#### Manual Backup
+#### 🚀 Automated Backup with S3 Upload (Recommended)
 
 ```bash
-# Dari host
-docker exec -it postgres-18 /backup-scripts/backup.sh
+# One command - creates backup + uploads to S3
+./backup-with-s3.sh
+```
 
-# Dari container
-docker exec -it postgres-18 bash -c "cd /backup-scripts && ./backup.sh"
+This script automatically:
+1. ✅ Creates local PostgreSQL backup
+2. ✅ Uploads to S3 with encryption
+3. ✅ Verifies upload success
+4. ✅ Logs everything
+
+**Use this for cron jobs!**
+
+#### Manual Backup (Local Only)
+
+```bash
+# Backup without S3 upload
+docker exec -it postgres-18 /backup-scripts/backup.sh
 ```
 
 #### List Backups
 
 ```bash
+# Local backups
 docker exec -it postgres-18 /backup-scripts/restore.sh --list
 ```
 

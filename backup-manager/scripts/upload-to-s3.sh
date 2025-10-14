@@ -77,8 +77,8 @@ upload_with_retry() {
         if aws s3 cp "$local_file" "$s3_path" \
             --region "${AWS_DEFAULT_REGION}" \
             --storage-class "${S3_STORAGE_CLASS}" \
-            --server-side-encryption AES256 \
-            --no-progress 2>&1 | tee -a "$LOG_FILE"; then
+            --sse AES256 \
+            2>&1 | tee -a "$LOG_FILE"; then
 
             log_message "SUCCESS" "Upload completed: $s3_path"
             return 0
