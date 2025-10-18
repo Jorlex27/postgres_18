@@ -5,6 +5,7 @@
 CREATE DATABASE jam_auth_dev
     WITH
     OWNER = postgres
+    TEMPLATE = template0
     ENCODING = 'UTF8'
     LC_COLLATE = 'C'
     LC_CTYPE = 'C'
@@ -15,6 +16,7 @@ CREATE DATABASE jam_auth_dev
 CREATE DATABASE jam_auth_test
     WITH
     OWNER = postgres
+    TEMPLATE = template0
     ENCODING = 'UTF8'
     LC_COLLATE = 'C'
     LC_CTYPE = 'C'
@@ -25,6 +27,7 @@ CREATE DATABASE jam_auth_test
 CREATE DATABASE jam_auth_prod
     WITH
     OWNER = postgres
+    TEMPLATE = template0
     ENCODING = 'UTF8'
     LC_COLLATE = 'C'
     LC_CTYPE = 'C'
